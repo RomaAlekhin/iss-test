@@ -49,8 +49,9 @@ const handleClickButtonRemove = () => {
       </Button>
 
       <Button variant="outline" :onclick="handleClickButtonAdd">
-        <Plus class="w-4 h-4 mr-2" /> Add todo</Button
-      >
+        <Plus class="w-4 h-4 mr-2" />
+        Add todo
+      </Button>
     </div>
   </div>
 </template>

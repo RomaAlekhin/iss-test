@@ -6,7 +6,7 @@ import { useTodoList } from "./composables/useTodoList";
 import { Separator } from "@/components/ui/separator";
 import { Todo, TodoSelected } from "./types";
 
-const { todos, addTodoItem, removeTodoItem, removeTodoItems } = useTodoList();
+const { todos, addTodoItem, removeTodoItems } = useTodoList();
 
 const isEdit = ref(false);
 const checkedState = ref<TodoSelected>({});
@@ -31,16 +31,16 @@ const handleAddTodo = () => {
   });
 };
 
-const handleRemoveTodo = (id: Todo["id"]) => {
-  removeTodoItem(id);
-};
-
 const handleEditTodos = () => {
   if (isEdit) {
     checkedState.value = {};
   }
 
   isEdit.value = !isEdit.value;
+};
+
+const handleEditTodoItem = (id: Todo["id"]) => {
+  alert(`edit ${id}`);
 };
 
 const handleRemoveTodos = () => {
@@ -68,7 +68,7 @@ const handleRemoveTodos = () => {
         v-model:checked="checkedState"
         :todos="todos"
         :is-edit="isEdit"
-        @remove-todo="handleRemoveTodo"
+        @edit-todo="handleEditTodoItem"
       />
 
       {{ checkedState }}
