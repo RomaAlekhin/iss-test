@@ -5,11 +5,21 @@ import { generateSuperUniqueIdentifierEver } from "@/utils";
 export function useTodoList() {
   const todos = useStorage<Todo[]>("todo-list", []);
 
-  const addTodoItem = (todo: TodoAdd) => {
+  const addTodoItem = (value: TodoAdd) => {
     todos.value.push({
       id: generateSuperUniqueIdentifierEver(),
       status: TodoStatus.IN_PROGRESS,
-      ...todo,
+      ...value,
+    });
+  };
+
+  const editTodoItem = (id: Todo["id"], { name, description }: TodoAdd) => {
+    todos.value = todos.value.map((todo) => {
+      if (id === todo.id) {
+        return { ...todo, name, description };
+      }
+
+      return todo;
     });
   };
 
@@ -21,5 +31,5 @@ export function useTodoList() {
     todos.value = todos.value.filter((todo) => !ids.includes(todo.id));
   };
 
-  return { todos, addTodoItem, removeTodoItem, removeTodoItems };
+  return { todos, addTodoItem, removeTodoItem, removeTodoItems, editTodoItem };
 }

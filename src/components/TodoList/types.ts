@@ -6,8 +6,8 @@ export enum TodoStatus {
 export interface Todo {
   id: string;
   name: string;
-  description: string;
   status: TodoStatus;
+  description?: string;
 }
 
 export type TodoAdd = Omit<Todo, "id" | "status">;

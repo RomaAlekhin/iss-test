@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import Actions from "./components/Actions.vue";
-import List from "./components/List.vue";
+import { Actions, List, EditTodo } from "./components";
 import { useTodoList } from "./composables/useTodoList";
 import { Separator } from "@/components/ui/separator";
-import { Todo, TodoSelected } from "./types";
+import { Todo, TodoAdd, TodoSelected } from "./types";
+import { useModalEditTodo } from "./composables/useModalEditTodo";
 
-const { todos, addTodoItem, removeTodoItems } = useTodoList();
+const { todos, addTodoItem, removeTodoItem, removeTodoItems, editTodoItem } =
+  useTodoList();
+const { isOpen, todoToEdit, onClose, onOpen } = useModalEditTodo();
 
 const isEdit = ref(false);
 const checkedState = ref<TodoSelected>({});
@@ -24,13 +26,6 @@ const checkedIds = computed(() => {
   );
 });
 
-const handleAddTodo = () => {
-  addTodoItem({
-    name: "test name",
-    description: "test description",
-  });
-};
-
 const handleEditTodos = () => {
   if (isEdit) {
     checkedState.value = {};
@@ -39,8 +34,16 @@ const handleEditTodos = () => {
   isEdit.value = !isEdit.value;
 };
 
-const handleEditTodoItem = (id: Todo["id"]) => {
-  alert(`edit ${id}`);
+const onModifyTodoItem = (todo: TodoAdd) => {
+  const id = todoToEdit.value?.id;
+
+  if (id) {
+    editTodoItem(id, todo);
+  } else {
+    addTodoItem(todo);
+  }
+
+  onClose();
 };
 
 const handleRemoveTodos = () => {
@@ -48,6 +51,13 @@ const handleRemoveTodos = () => {
 
   checkedState.value = {};
   isEdit.value = false;
+};
+
+const handleRemoveTodo = (id: Todo["id"]) => {
+  removeTodoItem(id);
+
+  checkedState.value = {};
+  onClose();
 };
 </script>
 
@@ -57,22 +67,32 @@ const handleRemoveTodos = () => {
       <Actions
         :is-edit="isEdit"
         :is-selected-some-todos="checkedIds.length > 0"
-        @add-todo="handleAddTodo"
+        @add-todo="onOpen"
         @edit-todos="handleEditTodos"
         @remove-todos="handleRemoveTodos"
       />
 
       <Separator />
 
-      <List
-        v-model:checked="checkedState"
-        :todos="todos"
-        :is-edit="isEdit"
-        @edit-todo="handleEditTodoItem"
-      />
+      <TransitionGroup>
+        <List
+          v-if="todos.length > 0"
+          v-model:checked="checkedState"
+          :todos="todos"
+          :is-edit="isEdit"
+          @edit-todo="onOpen"
+        />
 
-      {{ checkedState }}
-      {{ checkedIds }}
+        <span v-else class="flex justify-center">Not found todos</span>
+      </TransitionGroup>
+
+      <EditTodo
+        v-model="isOpen"
+        :todo="todoToEdit"
+        @submit="onModifyTodoItem"
+        @remove="handleRemoveTodo"
+        @close="onClose"
+      />
     </div>
   </div>
 </template>

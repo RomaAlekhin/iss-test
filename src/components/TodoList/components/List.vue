@@ -3,7 +3,7 @@ import { Todo } from "../types";
 import Item from "./Item.vue";
 
 const emit = defineEmits<{
-  (e: "edit-todo", id: Todo["id"]): void;
+  (e: "edit-todo", todo: Todo): void;
   (e: "update:checked", value: Record<Todo["id"], boolean>): void;
 }>();
 
@@ -13,8 +13,8 @@ const props = defineProps<{
   isEdit?: boolean;
 }>();
 
-const handleClickTodoEdit = (id: Todo["id"]) => {
-  emit("edit-todo", id);
+const handleClickTodoEdit = (todo: Todo) => {
+  emit("edit-todo", todo);
 };
 
 const handleClickTodoItem = (todo: Todo) => {
@@ -36,7 +36,7 @@ const handleClickTodoItem = (todo: Todo) => {
       :is-edit="isEdit"
       :todo="todo"
       @click-todo="() => handleClickTodoItem(todo)"
-      @edit-todo="() => handleClickTodoEdit(todo.id)"
+      @edit-todo="() => handleClickTodoEdit(todo)"
     />
   </ul>
 </template>

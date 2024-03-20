@@ -7,7 +7,7 @@ const isDark = useDark();
 const toggleDark = useToggle(isDark);
 </script>
 <template>
-  <div class="w-screen h-screen" :class="isDark ? 'dark' : ''">
+  <div :class="isDark ? 'dark' : ''">
     <div class="mb-4 p-2 flex justify-center">
       <h1 class="flex-1 text-center text-3xl font-bold underline">ISS test</h1>
 
