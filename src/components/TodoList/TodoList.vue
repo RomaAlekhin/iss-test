@@ -7,12 +7,18 @@ import { Todo, TodoAdd, TodoSelected } from "./types";
 import { useModalEditTodo } from "./composables/useModalEditTodo";
 import { useSearchFilter } from "./composables/useSearchFilter";
 
-const { todos, addTodoItem, removeTodoItem, removeTodoItems, editTodoItem } =
-  useTodoList();
+const {
+  todos: storedTodos,
+  addTodoItem,
+  removeTodoItem,
+  removeTodoItems,
+  editTodoItem,
+  markTodoDone,
+} = useTodoList();
 
 const { isOpen, todoToEdit, onClose, onOpen } = useModalEditTodo();
 
-const { todos: filteredTodos, search, status } = useSearchFilter(todos.value);
+const { todos, search, status } = useSearchFilter(storedTodos);
 
 const isEdit = ref(false);
 const checkedState = ref<TodoSelected>({});
@@ -63,6 +69,10 @@ const handleRemoveTodo = (id: Todo["id"]) => {
   checkedState.value = {};
   onClose();
 };
+
+const handleDoneTodo = (id: Todo["id"]) => {
+  markTodoDone(id);
+};
 </script>
 
 <template>
@@ -83,11 +93,12 @@ const handleRemoveTodo = (id: Todo["id"]) => {
       <Separator />
 
       <List
-        v-if="filteredTodos.length > 0"
+        v-if="todos.length > 0"
         v-model:checked="checkedState"
-        :todos="filteredTodos"
+        :todos="todos"
         :is-edit="isEdit"
-        @edit-todo="onOpen"
+        @edit="onOpen"
+        @done="handleDoneTodo"
       />
 
       <span v-else class="flex justify-center">Not found todos</span>

@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Edit2 } from "lucide-vue-next";
-import { Todo } from "../types";
+import { Edit2, Check, X } from "lucide-vue-next";
+import { Todo, TodoStatus } from "../types";
 import { Badge } from "@/components/ui/badge";
 import { todoStatusLabel } from "../utils";
 
 const emit = defineEmits<{
-  (e: "edit-todo"): void;
-  (e: "click-todo"): void;
+  (e: "done"): void;
+  (e: "edit"): void;
+  (e: "click"): void;
 }>();
 
 defineProps<{
@@ -18,11 +19,15 @@ defineProps<{
 }>();
 
 const handleClickButtonEdit = () => {
-  emit("edit-todo");
+  emit("edit");
+};
+
+const handleClickButtonDone = () => {
+  emit("done");
 };
 
 const handleClickTodoItem = () => {
-  emit("click-todo");
+  emit("click");
 };
 </script>
 
@@ -33,15 +38,27 @@ const handleClickTodoItem = () => {
   >
     <Checkbox v-if="isEdit" :checked="checked" />
 
-    <span>{{ todo.name }}</span>
+    <span :class="todo.status === TodoStatus.DONE ? 'line-through' : ''">{{
+      todo.name
+    }}</span>
 
     <div class="ml-auto flex gap-2" @click="(e) => e.stopPropagation()">
-      <Badge variant="outline" class="my-auto">{{
-        todoStatusLabel[todo.status]
-      }}</Badge>
+      <Badge variant="outline" class="my-auto">
+        {{ todoStatusLabel[todo.status] }}
+      </Badge>
 
       <Button
         variant="secondary"
+        class="size-8"
+        size="icon"
+        :onclick="handleClickButtonDone"
+      >
+        <X v-if="todo.status === TodoStatus.DONE" class="w-4 h-4" />
+        <Check v-else class="w-4 h-4" />
+      </Button>
+
+      <Button
+        variant="outline"
         class="size-8"
         size="icon"
         :onclick="handleClickButtonEdit"

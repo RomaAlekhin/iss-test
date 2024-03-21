@@ -1,4 +1,4 @@
-import { computed, ref } from "vue";
+import { MaybeRefOrGetter, computed, ref, toValue } from "vue";
 import { FilterStatus, Todo } from "../types";
 
 const filterTodoByStatus = (todo: Todo, status?: FilterStatus): boolean => {
@@ -16,12 +16,12 @@ const filterTodoBySearch = (todo: Todo, search?: string): boolean => {
   return name.includes(searchValue) || description.includes(searchValue);
 };
 
-export function useSearchFilter(todos: Todo[]) {
+export function useSearchFilter(todos: MaybeRefOrGetter<Todo[]>) {
   const search = ref<string>();
   const status = ref<FilterStatus>("ALL");
 
   const filteredTodos = computed(() => {
-    return todos.filter(
+    return toValue(todos).filter(
       (todo) =>
         filterTodoByStatus(todo, status.value) &&
         filterTodoBySearch(todo, search.value)
