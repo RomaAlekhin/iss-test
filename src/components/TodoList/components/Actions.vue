@@ -36,6 +36,8 @@ const handleClickButtonRemove = () => {
       >
         <Edit class="w-4 h-4" />
       </Button>
+
+      <slot name="filter"></slot>
     </div>
 
     <div class="flex gap-2">

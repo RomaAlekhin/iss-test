@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Edit2 } from "lucide-vue-next";
 import { Todo } from "../types";
+import { Badge } from "@/components/ui/badge";
+import { todoStatusLabel } from "../utils";
 
 const emit = defineEmits<{
   (e: "edit-todo"): void;
@@ -34,7 +36,16 @@ const handleClickTodoItem = () => {
     <span>{{ todo.name }}</span>
 
     <div class="ml-auto flex gap-2" @click="(e) => e.stopPropagation()">
-      <Button variant="secondary" size="icon" :onclick="handleClickButtonEdit">
+      <Badge variant="outline" class="my-auto">{{
+        todoStatusLabel[todo.status]
+      }}</Badge>
+
+      <Button
+        variant="secondary"
+        class="size-8"
+        size="icon"
+        :onclick="handleClickButtonEdit"
+      >
         <Edit2 class="w-4 h-4" />
       </Button>
     </div>

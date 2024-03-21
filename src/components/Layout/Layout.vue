@@ -9,7 +9,7 @@ const toggleDark = useToggle(isDark);
 <template>
   <div :class="isDark ? 'dark' : ''">
     <div class="mb-4 p-2 flex justify-center">
-      <h1 class="flex-1 text-center text-3xl font-bold underline">ISS test</h1>
+      <h1 class="flex-1 text-center text-3xl font-bold">ISS TODO app</h1>
 
       <Button
         class="rounded-full"

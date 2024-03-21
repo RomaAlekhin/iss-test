@@ -3,6 +3,13 @@ export enum TodoStatus {
   IN_PROGRESS = "IN_PROGRESS",
 }
 
+export type FilterStatus = "ALL" | TodoStatus;
+
+export interface FilterStatusValue {
+  key: FilterStatus;
+  label: string;
+}
+
 export interface Todo {
   id: string;
   name: string;

@@ -76,9 +76,10 @@ const handleDelete = () => {
     </FormField>
 
     <div class="flex justify-between gap-2 mt-4">
-      <Button v-if="todo?.id" variant="destructive" @click="handleDelete"
-        >Remove</Button
-      >
+      <Button v-if="todo?.id" variant="destructive" @click="handleDelete">
+        Remove
+      </Button>
+
       <Button type="submit" class="ml-auto">Save changes</Button>
     </div>
   </form>

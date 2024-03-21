@@ -30,8 +30,9 @@ const handleClickTodoItem = (todo: Todo) => {
 <template>
   <ul class="flex flex-col gap-4">
     <Item
-      v-for="todo in todos"
+      v-for="(todo, index) in todos"
       :key="todo.id"
+      :data-index="index"
       :checked="checked[todo.id]"
       :is-edit="isEdit"
       :todo="todo"

@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { Actions, List, EditTodo } from "./components";
+import { Actions, List, EditTodo, Filter } from "./components";
 import { useTodoList } from "./composables/useTodoList";
 import { Separator } from "@/components/ui/separator";
 import { Todo, TodoAdd, TodoSelected } from "./types";
 import { useModalEditTodo } from "./composables/useModalEditTodo";
+import { useSearchFilter } from "./composables/useSearchFilter";
 
 const { todos, addTodoItem, removeTodoItem, removeTodoItems, editTodoItem } =
   useTodoList();
+
 const { isOpen, todoToEdit, onClose, onOpen } = useModalEditTodo();
+
+const { todos: filteredTodos, search, status } = useSearchFilter(todos.value);
 
 const isEdit = ref(false);
 const checkedState = ref<TodoSelected>({});
@@ -70,21 +74,23 @@ const handleRemoveTodo = (id: Todo["id"]) => {
         @add-todo="onOpen"
         @edit-todos="handleEditTodos"
         @remove-todos="handleRemoveTodos"
-      />
+      >
+        <template #filter>
+          <Filter v-model:search="search" v-model:status="status" />
+        </template>
+      </Actions>
 
       <Separator />
 
-      <TransitionGroup>
-        <List
-          v-if="todos.length > 0"
-          v-model:checked="checkedState"
-          :todos="todos"
-          :is-edit="isEdit"
-          @edit-todo="onOpen"
-        />
+      <List
+        v-if="filteredTodos.length > 0"
+        v-model:checked="checkedState"
+        :todos="filteredTodos"
+        :is-edit="isEdit"
+        @edit-todo="onOpen"
+      />
 
-        <span v-else class="flex justify-center">Not found todos</span>
-      </TransitionGroup>
+      <span v-else class="flex justify-center">Not found todos</span>
 
       <EditTodo
         v-model="isOpen"
